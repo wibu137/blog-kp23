@@ -1,5 +1,5 @@
 'use client';
-
+export const dynamic = 'force-dynamic'
 import { Button, Select, TextInput } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';

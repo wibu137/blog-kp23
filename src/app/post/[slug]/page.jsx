@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import CallToAction from '@/app/components/CallToAction';
 import RecentPosts from '@/app/components/RecentPosts';
 import { Button } from 'flowbite-react';
