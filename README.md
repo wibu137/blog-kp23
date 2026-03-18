@@ -8,7 +8,20 @@
 A modern, high-performance full-stack blog application built with **Next.js**, **Clerk** for seamless authentication, and **MongoDB** for robust data management.
 
 ---
+## 📑 Table of Contents
 
+- [✨ Features](#-features)
+- [🛠 Tech Stack](#-tech-stack)
+- [⚙️ Getting Started](#️-getting-started)
+  - [1. Prerequisites](#1-prerequisites)
+  - [2. Installation](#2-installation)
+  - [3. Environment Variables](#3-environment-variables)
+  - [4. Run the Application](#4-run-the-application)
+- [📂 Project Structure](#-project-structure)
+- [🤝 Contributing](#-contributing)
+- [📄 License](#-license)
+- [📞 Contact](#-contact)
+---
 ## ✨ Features
 
 - 🔐 **Authentication:** Secure login/signup with Clerk (Google, GitHub, Email/Password).
