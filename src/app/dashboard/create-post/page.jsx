@@ -1,12 +1,19 @@
 'use client';
 export const dynamic = 'force-dynamic'
+
+
+import dynamicImport from 'next/dynamic';
+
+const ReactQuill = dynamicImport(() => import('react-quill-new'), {
+  ssr: false,
+});
 import { useUser } from '@clerk/nextjs';
 import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
 
-import dynamic from 'next/dynamic';
+//import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
+// const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 // https://dev.to/a7u/reactquill-with-nextjs-478b
 import 'react-quill-new/dist/quill.snow.css';
 
