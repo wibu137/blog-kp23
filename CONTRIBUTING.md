@@ -62,7 +62,7 @@ To maintain high code quality and consistency across the **blog-kp23** project, 
 - **Comments:** 
   - Avoid obvious comments. Only add comments to explain "Why" a complex logic was implemented, not "What" the code is doing.
 - **Environment Variables:** 
-  - If your changes require new environment variables, add them to the `.env.example` file with a placeholder value.
+  - If your changes require new environment variables, add them to the `.env.local` file with a placeholder value.
 - **Dependencies:** 
   - Be mindful of the bundle size. Avoid adding heavy third-party libraries if a native or lightweight solution is available.
 
