@@ -51,3 +51,85 @@ cd blog-kp23
 
 # Install dependencies
 npm install
+```
+### 3. Environment Variables
+Create a `.env.local` file in the root directory and add your credentials:
+
+```env
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_....
+CLERK_SECRET_KEY=sk_test_....
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+WEBHOOK_SECRET=...
+# Firebase
+NEXT_PUBLIC_FIREBASE_API_KEY=AIzaS...
+# MongoDB
+MONGODB_URI=mongodb...
+# URL
+URL=http://localhost:3000
+```
+
+### 4. Run the Application
+
+```bash
+npm run dev
+```
+
+Open http://localhost:3000 with your browser to see the result.
+
+---
+
+## 📂 Project Structure
+
+```text
+blog-kp23/
+├── .next/                 # Build output (auto-generated)
+├── node_modules/          # Dependencies (auto-generated)
+├── public/                # Static assets
+├── src/                   # Main source code
+│   ├── app/               # Next.js App Router (pages, layouts, API)
+│   ├── lib/               # Utilities & shared logic
+│   ├── firebase.js        # Firebase configuration
+│   └── middleware.js      # Middleware (auth, routing, etc.)
+│
+├── .env.local             # Environment variables (ignored by git)
+├── .eslintrc.json         # ESLint configuration
+├── .gitignore             # Git ignore rules
+├── CONTRIBUTING.md        # Contribution guidelines
+├── LICENSE                # MIT license
+├── jsconfig.json          # Path alias config
+├── next.config.mjs        # Next.js configuration
+├── package.json           # Project scripts & dependencies
+├── package-lock.json      # Lock file
+├── postcss.config.mjs     # PostCSS config
+├── tailwind.config.js     # Tailwind CSS config
+├── README.md              # Documentation
+```
+
+
+---
+
+## 🤝 Contributing
+
+Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+Please read the `CONTRIBUTING.md` file for details on our code of conduct and the process for submitting pull requests.
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
+See the `LICENSE` file for more information.
+
+---
+
+## 📞 Contact
+
+* GitHub: https://github.com/wibu137/blog-kp23
+* Author: **wibu137**
+
+---
+
+💖 Developed with love by **wibu137**
