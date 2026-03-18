@@ -6,11 +6,11 @@ import { initializeApp } from "firebase/app";
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: "blog-kp23.firebaseapp.com",
-  projectId: "blog-kp23",
-  storageBucket: "blog-kp23.firebasestorage.app",
-  messagingSenderId: "914158007428",
-  appId: "1:914158007428:web:4f1e1450b460ef6c0afed1"
+  authDomain: "blogkp-a7b2b.firebaseapp.com",
+  projectId: "blogkp-a7b2b",
+  storageBucket: "blogkp-a7b2b.firebasestorage.app",
+  messagingSenderId: "556707463998",
+  appId: "1:556707463998:web:d492538079579504c0626f"
 };
 
 // Initialize Firebase
