@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic'
 import Link from 'next/link';
 import CallToAction from './components/CallToAction';
 import RecentPosts from './components/RecentPosts';
