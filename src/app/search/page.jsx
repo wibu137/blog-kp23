@@ -4,6 +4,7 @@ import { Button, Select, TextInput } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PostCard from '../components/PostCard';
+import { POST_CATEGORIES } from '@/lib/postCategories';
 export default function Search() {
   const [sidebarData, setSidebarData] = useState({
     searchTerm: '',
@@ -145,10 +146,11 @@ export default function Search() {
           <div className='flex items-center gap-2'>
             <label className='font-semibold'>Category:</label>
             <Select onChange={handleChange} id='category'>
-              <option value='uncategorized'>Uncategorized</option>
-              <option value='reactjs'>React.js</option>
-              <option value='nextjs'>Next.js</option>
-              <option value='javascript'>JavaScript</option>
+              {POST_CATEGORIES.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
             </Select>
           </div>
           <Button type='submit' outline gradientDuoTone='purpleToPink'>

@@ -16,14 +16,8 @@ import { useRouter } from 'next/navigation';
 // const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 // https://dev.to/a7u/reactquill-with-nextjs-478b
 import 'react-quill-new/dist/quill.snow.css';
-
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from 'firebase/storage';
-import { app } from '@/firebase';
+import { uploadPostImage } from '@/lib/uploadPostImage';
+import { POST_CATEGORIES } from '@/lib/postCategories';
 
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -34,10 +28,11 @@ export default function CreatePostPage() {
   const [file, setFile] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    category: 'uncategorized',
+  });
   const [publishError, setPublishError] = useState(null);
   const router = useRouter();
-  console.log(formData);
 
   const handleUpdloadImage = async () => {
     try {
@@ -45,32 +40,19 @@ export default function CreatePostPage() {
         setImageUploadError('Please select an image');
         return;
       }
+
       setImageUploadError(null);
-      const storage = getStorage(app);
-      const fileName = new Date().getTime() + '-' + file.name;
-      const storageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setImageUploadProgress(progress.toFixed(0));
-        },
-        (error) => {
-          setImageUploadError('Image upload failed');
-          setImageUploadProgress(null);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setImageUploadProgress(null);
-            setImageUploadError(null);
-            setFormData({ ...formData, image: downloadURL });
-          });
-        }
-      );
+      setImageUploadProgress(0);
+
+      const imageUrl = await uploadPostImage(file, {
+        onProgress: (progress) => setImageUploadProgress(progress),
+      });
+
+      setImageUploadProgress(null);
+      setImageUploadError(null);
+      setFormData({ ...formData, image: imageUrl });
     } catch (error) {
-      setImageUploadError('Image upload failed');
+      setImageUploadError(error.message || 'Image upload failed');
       setImageUploadProgress(null);
       console.log(error);
     }
@@ -129,11 +111,13 @@ export default function CreatePostPage() {
               onChange={(e) =>
                 setFormData({ ...formData, category: e.target.value })
               }
+              value={formData.category}
             >
-              <option value='uncategorized'>Select a category</option>
-              <option value='javascript'>JavaScript</option>
-              <option value='reactjs'>React.js</option>
-              <option value='nextjs'>Next.js</option>
+              {POST_CATEGORIES.map((category) => (
+                <option key={category} value={category}>
+                  {category}
+                </option>
+              ))}
             </Select>
           </div>
           <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>
@@ -148,9 +132,9 @@ export default function CreatePostPage() {
               size='sm'
               outline
               onClick={handleUpdloadImage}
-              disabled={imageUploadProgress}
+              disabled={imageUploadProgress !== null}
             >
-              {imageUploadProgress ? (
+              {imageUploadProgress !== null ? (
                 <div className='w-16 h-16'>
                   <CircularProgressbar
                     value={imageUploadProgress}
