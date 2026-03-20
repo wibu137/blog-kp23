@@ -5,31 +5,31 @@ const galleryImages = [
     src: 'https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=900&q=80',
     alt: 'Con người và văn hóa cộng đồng',
     className:
-      'top-8 -left-8 md:-left-24 w-28 h-36 md:w-40 md:h-52 rotate-[-8deg]',
+      'top-8 -left-8 md:-left-24 h-36 w-28 rotate-[-8deg] md:h-52 md:w-40',
   },
   {
     src: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80',
     alt: 'Cảnh quan thiên nhiên xanh mát',
     className:
-      'top-20 -right-8 md:-right-24 w-32 h-24 md:w-44 md:h-32 rotate-[7deg]',
+      'top-20 -right-8 md:-right-24 h-24 w-32 rotate-[7deg] md:h-32 md:w-44',
   },
   {
     src: 'https://images.unsplash.com/photo-1473773508845-188df298d2d1?auto=format&fit=crop&w=900&q=80',
     alt: 'Động vật trong môi trường tự nhiên',
     className:
-      'bottom-28 -left-10 md:-left-28 w-32 h-24 md:w-44 md:h-32 rotate-[6deg]',
+      'bottom-28 -left-10 md:-left-28 h-24 w-32 rotate-[6deg] md:h-32 md:w-44',
   },
   {
     src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=900&q=80',
     alt: 'Rừng xanh và môi trường bền vững',
     className:
-      'bottom-6 -right-8 md:-right-24 w-28 h-36 md:w-40 md:h-52 rotate-[-6deg]',
+      'bottom-6 -right-8 md:-right-24 h-36 w-28 rotate-[-6deg] md:h-52 md:w-40',
   },
 ];
 
 export default function About() {
   return (
-    <div className='min-h-screen bg-gradient-to-b from-amber-50 via-white to-emerald-50 px-4 py-16 md:px-8'>
+    <div className='min-h-screen bg-[radial-gradient(circle_at_top,_rgba(245,158,11,0.16),_transparent_28%),linear-gradient(to_bottom,_#fffbeb,_#ffffff_40%,_#ecfdf5)] px-4 py-16 md:px-8'>
       <div className='relative mx-auto max-w-6xl'>
         {galleryImages.map((image) => (
           <img
@@ -41,12 +41,19 @@ export default function About() {
         ))}
 
         <div className='mx-auto max-w-3xl rounded-[2rem] border border-white/70 bg-white/85 p-6 text-center shadow-xl backdrop-blur md:p-10'>
-          <p className='text-sm font-medium uppercase tracking-[0.35em] text-emerald-700'>
+          <p className="text-xs font-semibold uppercase tracking-[0.42em] text-emerald-700 md:text-sm">
             About KP23
           </p>
-          <h1 className='my-5 text-3xl font-semibold leading-tight text-slate-900 md:text-5xl'>
-            KP23&apos;s Blog
+
+          <h1 className="mx-auto my-5 max-w-2xl font-['Georgia','Times_New_Roman',serif] text-4xl font-semibold leading-[1.05] tracking-[-0.04em] text-slate-900 md:text-6xl">
+            Những câu chuyện đẹp về con người, văn hóa và thế giới tự nhiên
           </h1>
+
+          <p className="mx-auto mb-8 max-w-2xl font-['Georgia','Times_New_Roman',serif] text-lg italic leading-8 text-amber-900/80 md:text-xl">
+            KP23&apos;s Blog theo đuổi lối viết có chiều sâu, tinh tế và giàu cảm
+            xúc, như một tạp chí nhỏ dành cho những tâm hồn yêu tri thức và thiên
+            nhiên.
+          </p>
 
           <div className='mb-8 grid grid-cols-2 gap-3 md:hidden'>
             {galleryImages.map((image) => (
@@ -59,8 +66,8 @@ export default function About() {
             ))}
           </div>
 
-          <div className='flex flex-col gap-6 text-base leading-8 text-slate-600 md:text-lg'>
-            <p>
+          <div className="space-y-6 text-left font-['Georgia','Times_New_Roman',serif] text-[1.08rem] leading-8 text-slate-700 md:text-[1.16rem] md:leading-9">
+            <p className='first-letter:mr-1 first-letter:align-top first-letter:text-5xl first-letter:font-semibold first-letter:leading-none first-letter:text-emerald-800'>
               KP23&apos;s Blog là không gian dành cho những câu chuyện được viết
               bằng sự quan sát sâu sắc, tinh thần nhân văn và tình yêu bền bỉ với
               thế giới tự nhiên. Tại đây, mỗi bài viết không chỉ truyền tải thông
