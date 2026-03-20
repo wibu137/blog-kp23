@@ -59,11 +59,11 @@ export default function About() {
             {aboutCopy.eyebrow}
           </p>
 
-          <h1 className='mx-auto my-5 max-w-2xl font-serif text-4xl font-bold leading-[1.12] text-slate-900 md:text-6xl'>
+          <h1 className='mx-auto my-5 max-w-2xl text-4xl font-bold leading-[1.12] text-slate-900 md:text-6xl'>
             {aboutCopy.title}
           </h1>
 
-          <p className='mx-auto mb-8 max-w-2xl font-serif text-lg italic leading-8 text-amber-900/80 md:text-xl'>
+          <p className='mx-auto mb-8 max-w-2xl text-lg italic leading-8 text-amber-900/80 md:text-xl'>
             {aboutCopy.intro}
           </p>
 
@@ -78,7 +78,7 @@ export default function About() {
             ))}
           </div>
 
-          <div className='space-y-6 text-left font-serif text-[1.08rem] leading-8 text-slate-700 md:text-[1.16rem] md:leading-9'>
+          <div className='space-y-6 text-left text-[1.08rem] leading-8 text-slate-700 md:text-[1.16rem] md:leading-9'>
             {aboutCopy.paragraphs.map((paragraph, index) => (
               <p
                 key={paragraph}
