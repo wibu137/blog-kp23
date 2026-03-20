@@ -109,7 +109,12 @@ export default function FooterCom() {
             <Footer.Icon href='#' icon={BsFacebook} />
             <Footer.Icon href='#' icon={BsInstagram} />
             <Footer.Icon href='#' icon={BsTwitter} />
-            <Footer.Icon href='https://github.com/wibu137/blog-kp23' icon={BsGithub} />
+            <Footer.Icon
+              href='https://github.com/wibu137/blog-kp23'
+              icon={BsGithub}
+              target='_blank'
+              rel='noopener noreferrer'
+            />
             <Footer.Icon href='#' icon={BsDribbble} />
           </div>
         </div>
