@@ -41,12 +41,12 @@ This project is designed as a full-featured blog application with dashboard.
 
 ## 🛠 Tech Stack
 
-- **Framework:** Next.js (App Router)
+- **Framework:** [Next.js](https://nextjs.org/) (App Router)
 - **Authentication:** [Clerk](https://clerk.com/)
 - **Database:** [MongoDB](https://www.mongodb.com/)
 - **ORM/ODM:** [Mongoose](https://mongoosejs.com/) (or Prisma)
-- **Styling:** Tailwind CSS
-- **Deployment:** Vercel
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **Deployment:** [Vercel](https://vercel.com/)
 
 ---
 
