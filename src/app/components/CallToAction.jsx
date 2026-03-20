@@ -13,6 +13,9 @@ const ctaCopy = {
   buttonLabel: 'Kh\u00e1m ph\u00e1 b\u00e0i vi\u1ebft n\u1ed5i b\u1eadt',
   imageAlt:
     'C\u1ea3nh quan t\u1ef1 nhi\u00ean g\u1eafn v\u1edbi v\u0103n h\u00f3a v\u00e0 m\u00f4i tr\u01b0\u1eddng s\u1ed1ng',
+  imageCardTitle: 'Ch\u1ee7 \u0110\u1ec1 N\u1ed5i B\u1eadt',
+  imageCardDescription:
+    'Con ng\u01b0\u1eddi, v\u0103n h\u00f3a, thi\u00ean nhi\u00ean, m\u00f4i tr\u01b0\u1eddng v\u00e0 \u0111\u1ed9ng v\u1eadt \u0111\u01b0\u1ee3c k\u1ebft n\u1ed1i trong m\u1ed9t m\u1ea1ch k\u1ec3 chuy\u1ec7n r\u00f5 r\u00e0ng v\u00e0 truy\u1ec1n c\u1ea3m h\u1ee9ng.',
 };
 
 export default function CallToAction() {
@@ -60,13 +63,10 @@ export default function CallToAction() {
           />
           <div className='absolute inset-x-6 bottom-6 rounded-2xl border border-white/30 bg-white/85 p-4 shadow-lg backdrop-blur'>
             <p className='text-xs font-semibold uppercase tracking-[0.24em] text-emerald-700'>
-              Ch\u1ee7 \u0110\u1ec1 N\u1ed5i B\u1eadt
+              {ctaCopy.imageCardTitle}
             </p>
             <p className='mt-2 text-sm leading-6 text-slate-700'>
-              Con ng\u01b0\u1eddi, v\u0103n h\u00f3a, thi\u00ean nhi\u00ean, m\u00f4i
-              tr\u01b0\u1eddng v\u00e0 \u0111\u1ed9ng v\u1eadt \u0111\u01b0\u1ee3c k\u1ebft
-              n\u1ed1i trong m\u1ed9t m\u1ea1ch k\u1ec3 chuy\u1ec7n r\u00f5 r\u00e0ng v\u00e0
-              truy\u1ec1n c\u1ea3m h\u1ee9ng.
+              {ctaCopy.imageCardDescription}
             </p>
           </div>
         </div>
