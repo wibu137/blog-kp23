@@ -112,7 +112,6 @@ blog-kp23/
 ├── src/                   # Main source code
 │   ├── app/               # Next.js App Router (pages, layouts, API)
 │   ├── lib/               # Utilities & shared logic
-│   ├── firebase.js        # Firebase configuration
 │   └── middleware.js      # Middleware (auth, routing, etc.)
 │
 ├── .env.local             # Environment variables (ignored by git)
