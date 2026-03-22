@@ -15,6 +15,8 @@ export const POST = async (req) => {
     await connect();
     const data = await req.json();
     const content = data.content?.trim();
+    const parentCommentId = data.parentCommentId?.trim() || null;
+    const isAdmin = Boolean(authUser.publicMetadata?.isAdmin);
 
     if (!data.postId || !content) {
       return Response.json(
@@ -39,6 +41,17 @@ export const POST = async (req) => {
       return Response.json({ message: 'Post not found' }, { status: 404 });
     }
 
+    if (parentCommentId) {
+      const parentComment = await Comment.findById(parentCommentId).lean();
+
+      if (!parentComment || parentComment.postId !== data.postId) {
+        return Response.json(
+          { message: 'Parent comment not found' },
+          { status: 404 }
+        );
+      }
+    }
+
     const displayName =
       mongoUser.username ||
       [mongoUser.firstName, mongoUser.lastName].filter(Boolean).join(' ') ||
@@ -47,10 +60,14 @@ export const POST = async (req) => {
 
     const comment = await Comment.create({
       postId: data.postId,
+      postTitle: post.title || '',
+      postSlug: post.slug || '',
+      parentCommentId,
       userId: mongoUser._id.toString(),
       username: displayName,
       profilePicture: mongoUser.profilePicture || authUser.imageUrl || '',
       content,
+      isApproved: isAdmin,
     });
 
     return Response.json({ comment }, { status: 201 });

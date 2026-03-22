@@ -7,6 +7,7 @@ import {
   HiDocumentText,
   HiOutlineUserGroup,
   HiChartPie,
+  HiChatAlt2,
 } from 'react-icons/hi';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -74,6 +75,17 @@ export default function DashSidebar() {
                 as='div'
               >
                 Users
+              </Sidebar.Item>
+            </Link>
+          )}
+          {user?.publicMetadata?.isAdmin && (
+            <Link href='/dashboard?tab=comments'>
+              <Sidebar.Item
+                active={tab === 'comments'}
+                icon={HiChatAlt2}
+                as='div'
+              >
+                Comments
               </Sidebar.Item>
             </Link>
           )}

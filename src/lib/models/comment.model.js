@@ -7,6 +7,21 @@ const commentSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
+    postTitle: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    postSlug: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    parentCommentId: {
+      type: String,
+      default: null,
+      index: true,
+    },
     userId: {
       type: String,
       required: true,
@@ -26,11 +41,17 @@ const commentSchema = new mongoose.Schema(
       trim: true,
       maxlength: 1000,
     },
+    isApproved: {
+      type: Boolean,
+      default: true,
+      index: true,
+    },
   },
   { timestamps: true }
 );
 
 commentSchema.index({ postId: 1, createdAt: -1 });
+commentSchema.index({ parentCommentId: 1, createdAt: 1 });
 
 const Comment =
   mongoose.models.Comment || mongoose.model('Comment', commentSchema);

@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import DashPosts from '../components/DashPosts';
 import DashUsers from '../components/DashUsers';
 import DashboardComp from '../components/DashboardComp';
+import DashComments from '../components/DashComments';
 export default function Dashboard() {
   const searchParams = useSearchParams();
   const [tab, setTab] = useState('');
@@ -29,6 +30,7 @@ export default function Dashboard() {
       {tab === 'posts' && <DashPosts />}
 
       {tab === 'users' && <DashUsers />}
+      {tab === 'comments' && <DashComments />}
       {tab === 'dash' && <DashboardComp />}
     </div>
   );

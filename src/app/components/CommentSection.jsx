@@ -2,7 +2,202 @@
 
 import { SignInButton, SignedIn, SignedOut, useUser } from '@clerk/nextjs';
 import { Alert, Button, Spinner, Textarea } from 'flowbite-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+
+function buildCommentTree(flatComments) {
+  const map = new Map();
+  const roots = [];
+
+  flatComments.forEach((comment) => {
+    map.set(comment._id, { ...comment, replies: [] });
+  });
+
+  map.forEach((comment) => {
+    if (comment.parentCommentId && map.has(comment.parentCommentId)) {
+      map.get(comment.parentCommentId).replies.push(comment);
+      return;
+    }
+
+    roots.push(comment);
+  });
+
+  const sortTree = (nodes, depth = 0) => {
+    nodes.sort((a, b) => {
+      const first = new Date(a.createdAt).getTime();
+      const second = new Date(b.createdAt).getTime();
+      return depth === 0 ? second - first : first - second;
+    });
+
+    nodes.forEach((node) => sortTree(node.replies, depth + 1));
+  };
+
+  sortTree(roots);
+  return roots;
+}
+
+function CommentItem({
+  comment,
+  currentUser,
+  isAdmin,
+  onReply,
+  onDelete,
+  onApprove,
+  replyDrafts,
+  setReplyDrafts,
+  submittingReplyId,
+  processingId,
+  depth = 0,
+}) {
+  const currentUserId = currentUser?.publicMetadata?.userMongoId;
+  const isOwner = currentUserId && comment.userId === currentUserId;
+  const canDelete = Boolean(isOwner || isAdmin);
+  const canReply = Boolean(currentUser);
+  const isApproved = comment.isApproved !== false;
+  const isReplying = replyDrafts.openFor === comment._id;
+  const replyValue = replyDrafts.values[comment._id] || '';
+
+  return (
+    <article
+      className={`rounded-2xl border border-slate-200 p-4 shadow-sm dark:border-slate-700 ${
+        !isApproved ? 'border-amber-300 bg-amber-50/60 dark:border-amber-700 dark:bg-amber-950/20' : ''
+      }`}
+      style={{ marginLeft: `${Math.min(depth, 4) * 20}px` }}
+    >
+      <div className='mb-3 flex items-start gap-3'>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={comment.profilePicture || '/favicon.ico'}
+          alt={comment.username}
+          className='h-10 w-10 rounded-full object-cover'
+        />
+        <div className='min-w-0 flex-1'>
+          <div className='flex flex-wrap items-center gap-2'>
+            <p className='truncate font-medium text-slate-900 dark:text-slate-100'>
+              {comment.username}
+            </p>
+            {!isApproved && (
+              <span className='rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-800 dark:bg-amber-900/50 dark:text-amber-200'>
+                Cho duyet
+              </span>
+            )}
+          </div>
+          <p className='text-xs text-slate-500 dark:text-slate-400'>
+            {new Date(comment.createdAt).toLocaleString()}
+          </p>
+        </div>
+      </div>
+
+      <p className='whitespace-pre-wrap text-sm leading-7 text-slate-700 dark:text-slate-200'>
+        {comment.content}
+      </p>
+
+      <div className='mt-4 flex flex-wrap items-center gap-3 text-sm'>
+        {canReply && (
+          <button
+            type='button'
+            className='font-medium text-teal-600 hover:underline dark:text-teal-400'
+            onClick={() =>
+              setReplyDrafts((prev) => ({
+                ...prev,
+                openFor: prev.openFor === comment._id ? null : comment._id,
+              }))
+            }
+          >
+            Tra loi
+          </button>
+        )}
+
+        {isAdmin && !isApproved && (
+          <button
+            type='button'
+            className='font-medium text-emerald-600 hover:underline dark:text-emerald-400'
+            onClick={() => onApprove(comment._id)}
+            disabled={processingId === comment._id}
+          >
+            {processingId === comment._id ? 'Dang duyet...' : 'Duyet'}
+          </button>
+        )}
+
+        {canDelete && (
+          <button
+            type='button'
+            className='font-medium text-red-600 hover:underline dark:text-red-400'
+            onClick={() => onDelete(comment._id)}
+            disabled={processingId === comment._id}
+          >
+            {processingId === comment._id ? 'Dang xoa...' : 'Xoa'}
+          </button>
+        )}
+      </div>
+
+      {isReplying && (
+        <form
+          className='mt-4 rounded-xl bg-slate-50 p-3 dark:bg-slate-900'
+          onSubmit={(e) => onReply(e, comment._id)}
+        >
+          <Textarea
+            rows={3}
+            placeholder='Viet tra loi cua ban...'
+            value={replyValue}
+            maxLength={1000}
+            onChange={(e) =>
+              setReplyDrafts((prev) => ({
+                ...prev,
+                values: {
+                  ...prev.values,
+                  [comment._id]: e.target.value,
+                },
+              }))
+            }
+          />
+          <div className='mt-3 flex items-center justify-between gap-3'>
+            <button
+              type='button'
+              className='text-sm text-slate-500 hover:underline dark:text-slate-400'
+              onClick={() =>
+                setReplyDrafts((prev) => ({
+                  ...prev,
+                  openFor: null,
+                }))
+              }
+            >
+              Huy
+            </button>
+            <Button
+              type='submit'
+              size='sm'
+              gradientDuoTone='greenToBlue'
+              disabled={submittingReplyId === comment._id}
+            >
+              {submittingReplyId === comment._id ? 'Dang gui...' : 'Gui tra loi'}
+            </Button>
+          </div>
+        </form>
+      )}
+
+      {comment.replies.length > 0 && (
+        <div className='mt-4 space-y-4 border-l border-slate-200 pl-4 dark:border-slate-700'>
+          {comment.replies.map((reply) => (
+            <CommentItem
+              key={reply._id}
+              comment={reply}
+              currentUser={currentUser}
+              isAdmin={isAdmin}
+              onReply={onReply}
+              onDelete={onDelete}
+              onApprove={onApprove}
+              replyDrafts={replyDrafts}
+              setReplyDrafts={setReplyDrafts}
+              submittingReplyId={submittingReplyId}
+              processingId={processingId}
+              depth={depth + 1}
+            />
+          ))}
+        </div>
+      )}
+    </article>
+  );
+}
 
 export default function CommentSection({ postId }) {
   const { user } = useUser();
@@ -10,7 +205,18 @@ export default function CommentSection({ postId }) {
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [submittingReplyId, setSubmittingReplyId] = useState(null);
+  const [processingId, setProcessingId] = useState(null);
   const [error, setError] = useState(null);
+  const [notice, setNotice] = useState(null);
+  const [replyDrafts, setReplyDrafts] = useState({
+    openFor: null,
+    values: {},
+  });
+
+  const isAdmin = Boolean(user?.publicMetadata?.isAdmin);
+
+  const commentTree = useMemo(() => buildCommentTree(comments), [comments]);
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -41,6 +247,36 @@ export default function CommentSection({ postId }) {
     fetchComments();
   }, [postId]);
 
+  const createComment = async ({ content: value, parentCommentId = null }) => {
+    const res = await fetch('/api/comment/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        postId,
+        content: value,
+        parentCommentId,
+      }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || 'Failed to create comment');
+    }
+
+    setComments((prev) => [data.comment, ...prev]);
+    setError(null);
+
+    if (data.comment.isApproved === false) {
+      setNotice('Binh luan cua ban da duoc gui va dang cho admin duyet.');
+    } else {
+      setNotice('Binh luan da duoc dang thanh cong.');
+    }
+
+    return data.comment;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -51,29 +287,98 @@ export default function CommentSection({ postId }) {
 
     try {
       setSubmitting(true);
-      const res = await fetch('/api/comment/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          postId,
-          content,
-        }),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || 'Failed to create comment');
-      }
-
-      setComments((prev) => [data.comment, ...prev]);
+      await createComment({ content: content.trim() });
       setContent('');
-      setError(null);
     } catch (submitError) {
       setError(submitError.message || 'Failed to create comment');
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleReply = async (e, parentCommentId) => {
+    e.preventDefault();
+    const value = replyDrafts.values[parentCommentId]?.trim();
+
+    if (!value) {
+      setError('Vui long nhap noi dung tra loi.');
+      return;
+    }
+
+    try {
+      setSubmittingReplyId(parentCommentId);
+      await createComment({ content: value, parentCommentId });
+      setReplyDrafts((prev) => ({
+        openFor: null,
+        values: {
+          ...prev.values,
+          [parentCommentId]: '',
+        },
+      }));
+    } catch (replyError) {
+      setError(replyError.message || 'Failed to create reply');
+    } finally {
+      setSubmittingReplyId(null);
+    }
+  };
+
+  const handleDelete = async (commentId) => {
+    try {
+      setProcessingId(commentId);
+      const res = await fetch('/api/comment/delete', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ commentId }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to delete comment');
+      }
+
+      setComments((prev) =>
+        prev.filter((comment) => !data.deletedIds.includes(comment._id))
+      );
+      setNotice('Da xoa binh luan.');
+      setError(null);
+    } catch (deleteError) {
+      setError(deleteError.message || 'Failed to delete comment');
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  const handleApprove = async (commentId) => {
+    try {
+      setProcessingId(commentId);
+      const res = await fetch('/api/comment/approve', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ commentId }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to approve comment');
+      }
+
+      setComments((prev) =>
+        prev.map((comment) =>
+          comment._id === commentId
+            ? { ...comment, isApproved: true, ...data.comment }
+            : comment
+        )
+      );
+      setNotice('Da duyet binh luan.');
+      setError(null);
+    } catch (approveError) {
+      setError(approveError.message || 'Failed to approve comment');
+    } finally {
+      setProcessingId(null);
     }
   };
 
@@ -83,14 +388,14 @@ export default function CommentSection({ postId }) {
         <div>
           <h2 className='text-2xl font-semibold'>Binh luan</h2>
           <p className='text-sm text-slate-500 dark:text-slate-400'>
-            {comments.length} binh luan cho bai viet nay
+            {comments.length} binh luan hien thi trong phien cua ban
           </p>
         </div>
       </div>
 
       <SignedOut>
         <div className='mb-6 rounded-2xl border border-dashed border-teal-300 bg-teal-50 p-4 text-sm text-slate-700 dark:border-teal-700 dark:bg-slate-900 dark:text-slate-200'>
-          Dang nhap de tham gia binh luan.
+          Dang nhap de tham gia binh luan va tra loi nguoi khac.
           <div className='mt-3'>
             <SignInButton mode='modal'>
               <Button gradientDuoTone='greenToBlue'>Dang nhap de binh luan</Button>
@@ -100,7 +405,10 @@ export default function CommentSection({ postId }) {
       </SignedOut>
 
       <SignedIn>
-        <form onSubmit={handleSubmit} className='mb-8 rounded-2xl border border-slate-200 p-4 shadow-sm dark:border-slate-700'>
+        <form
+          onSubmit={handleSubmit}
+          className='mb-8 rounded-2xl border border-slate-200 p-4 shadow-sm dark:border-slate-700'
+        >
           <div className='mb-3 flex items-center gap-3'>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -113,7 +421,9 @@ export default function CommentSection({ postId }) {
                 {user?.username || user?.fullName || 'Ban'}
               </p>
               <p className='text-sm text-slate-500 dark:text-slate-400'>
-                Chia se y kien cua ban mot cach lich su va huu ich.
+                {isAdmin
+                  ? 'Binh luan cua admin se hien thi ngay lap tuc.'
+                  : 'Binh luan moi se cho admin duyet truoc khi hien thi cong khai.'}
               </p>
             </div>
           </div>
@@ -139,6 +449,12 @@ export default function CommentSection({ postId }) {
         </form>
       </SignedIn>
 
+      {notice && (
+        <Alert color='success' className='mb-4'>
+          {notice}
+        </Alert>
+      )}
+
       {error && (
         <Alert color='failure' className='mb-6'>
           {error}
@@ -150,37 +466,26 @@ export default function CommentSection({ postId }) {
           <Spinner size='sm' />
           <span>Dang tai binh luan...</span>
         </div>
-      ) : comments.length === 0 ? (
+      ) : commentTree.length === 0 ? (
         <div className='rounded-2xl bg-slate-50 p-5 text-sm text-slate-600 dark:bg-slate-900 dark:text-slate-300'>
           Chua co binh luan nao. Hay la nguoi dau tien de lai y kien.
         </div>
       ) : (
         <div className='space-y-4'>
-          {comments.map((comment) => (
-            <article
+          {commentTree.map((comment) => (
+            <CommentItem
               key={comment._id}
-              className='rounded-2xl border border-slate-200 p-4 shadow-sm dark:border-slate-700'
-            >
-              <div className='mb-3 flex items-center gap-3'>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={comment.profilePicture || '/favicon.ico'}
-                  alt={comment.username}
-                  className='h-10 w-10 rounded-full object-cover'
-                />
-                <div className='min-w-0'>
-                  <p className='truncate font-medium text-slate-900 dark:text-slate-100'>
-                    {comment.username}
-                  </p>
-                  <p className='text-xs text-slate-500 dark:text-slate-400'>
-                    {new Date(comment.createdAt).toLocaleString()}
-                  </p>
-                </div>
-              </div>
-              <p className='whitespace-pre-wrap text-sm leading-7 text-slate-700 dark:text-slate-200'>
-                {comment.content}
-              </p>
-            </article>
+              comment={comment}
+              currentUser={user}
+              isAdmin={isAdmin}
+              onReply={handleReply}
+              onDelete={handleDelete}
+              onApprove={handleApprove}
+              replyDrafts={replyDrafts}
+              setReplyDrafts={setReplyDrafts}
+              submittingReplyId={submittingReplyId}
+              processingId={processingId}
+            />
           ))}
         </div>
       )}
