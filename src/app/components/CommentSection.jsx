@@ -92,7 +92,7 @@ function CommentItem({
               }))
             }
           >
-            Tra loi
+            Trả lời
           </button>
         )}
 
@@ -103,7 +103,7 @@ function CommentItem({
             onClick={() => onDelete(comment._id)}
             disabled={processingId === comment._id}
           >
-            {processingId === comment._id ? 'Dang xoa...' : 'Xoa'}
+            {processingId === comment._id ? 'Đang xóa...' : 'Xóa'}
           </button>
         )}
       </div>
@@ -115,7 +115,7 @@ function CommentItem({
         >
           <Textarea
             rows={3}
-            placeholder='Viet tra loi cua ban...'
+            placeholder='Viết trả lời của bạn...'
             value={replyValue}
             maxLength={1000}
             onChange={(e) =>
@@ -139,7 +139,7 @@ function CommentItem({
                 }))
               }
             >
-              Huy
+              Hủy
             </button>
             <Button
               type='submit'
@@ -147,7 +147,9 @@ function CommentItem({
               gradientDuoTone='greenToBlue'
               disabled={submittingReplyId === comment._id}
             >
-              {submittingReplyId === comment._id ? 'Dang gui...' : 'Gui tra loi'}
+              {submittingReplyId === comment._id
+                ? 'Đang gửi...'
+                : 'Gửi trả lời'}
             </Button>
           </div>
         </form>
@@ -244,7 +246,7 @@ export default function CommentSection({ postId }) {
 
     setComments((prev) => [data.comment, ...prev]);
     setError(null);
-    setNotice('Binh luan da duoc dang thanh cong.');
+    setNotice('Bình luận đã được đăng thành công.');
 
     return data.comment;
   };
@@ -253,7 +255,7 @@ export default function CommentSection({ postId }) {
     e.preventDefault();
 
     if (!content.trim()) {
-      setError('Vui long nhap noi dung binh luan.');
+      setError('Vui lòng nhập nội dung bình luận.');
       return;
     }
 
@@ -273,7 +275,7 @@ export default function CommentSection({ postId }) {
     const value = replyDrafts.values[parentCommentId]?.trim();
 
     if (!value) {
-      setError('Vui long nhap noi dung tra loi.');
+      setError('Vui lòng nhập nội dung trả lời.');
       return;
     }
 
@@ -313,7 +315,7 @@ export default function CommentSection({ postId }) {
       setComments((prev) =>
         prev.filter((comment) => !data.deletedIds.includes(comment._id))
       );
-      setNotice('Da xoa binh luan.');
+      setNotice('Đã xóa bình luận.');
       setError(null);
     } catch (deleteError) {
       setError(deleteError.message || 'Failed to delete comment');
@@ -326,19 +328,21 @@ export default function CommentSection({ postId }) {
     <section className='mx-auto mt-12 w-full max-w-2xl border-t border-slate-200 px-3 pt-8 dark:border-slate-700'>
       <div className='mb-6 flex items-center justify-between gap-3'>
         <div>
-          <h2 className='text-2xl font-semibold'>Binh luan</h2>
+          <h2 className='text-2xl font-semibold'>Bình luận</h2>
           <p className='text-sm text-slate-500 dark:text-slate-400'>
-            {comments.length} binh luan hien thi trong phien cua ban
+            {comments.length} bình luận hiển thị trong phiên của bạn
           </p>
         </div>
       </div>
 
       <SignedOut>
         <div className='mb-6 rounded-2xl border border-dashed border-teal-300 bg-teal-50 p-4 text-sm text-slate-700 dark:border-teal-700 dark:bg-slate-900 dark:text-slate-200'>
-          Dang nhap de tham gia binh luan va tra loi nguoi khac.
+          Đăng nhập để tham gia bình luận và trả lời người khác.
           <div className='mt-3'>
             <SignInButton mode='modal'>
-              <Button gradientDuoTone='greenToBlue'>Dang nhap de binh luan</Button>
+              <Button gradientDuoTone='greenToBlue'>
+                Đăng nhập để bình luận
+              </Button>
             </SignInButton>
           </div>
         </div>
@@ -358,30 +362,30 @@ export default function CommentSection({ postId }) {
             />
             <div>
               <p className='font-medium text-slate-900 dark:text-slate-100'>
-                {user?.username || user?.fullName || 'Ban'}
+                {user?.username || user?.fullName || 'Bạn'}
               </p>
               <p className='text-sm text-slate-500 dark:text-slate-400'>
-                Chia se y kien cua ban va tra loi nguoi khac ngay duoi bai viet.
+                Chia sẻ ý kiến của bạn và trả lời người khác ngay dưới bài viết.
               </p>
             </div>
           </div>
           <Textarea
             rows={4}
-            placeholder='Viet binh luan cua ban...'
+            placeholder='Viết bình luận của bạn...'
             value={content}
             maxLength={1000}
             onChange={(e) => setContent(e.target.value)}
           />
           <div className='mt-3 flex items-center justify-between gap-3'>
             <span className='text-xs text-slate-500 dark:text-slate-400'>
-              {content.trim().length}/1000 ky tu
+              {content.trim().length}/1000 ký tự
             </span>
             <Button
               type='submit'
               gradientDuoTone='greenToBlue'
               disabled={submitting}
             >
-              {submitting ? 'Dang gui...' : 'Gui binh luan'}
+              {submitting ? 'Đang gửi...' : 'Gửi bình luận'}
             </Button>
           </div>
         </form>
@@ -402,11 +406,11 @@ export default function CommentSection({ postId }) {
       {loading ? (
         <div className='flex items-center gap-3 py-8 text-slate-500 dark:text-slate-400'>
           <Spinner size='sm' />
-          <span>Dang tai binh luan...</span>
+          <span>Đang tải bình luận...</span>
         </div>
       ) : commentTree.length === 0 ? (
         <div className='rounded-2xl bg-slate-50 p-5 text-sm text-slate-600 dark:bg-slate-900 dark:text-slate-300'>
-          Chua co binh luan nao. Hay la nguoi dau tien de lai y kien.
+          Chưa có bình luận nào. Hãy là người đầu tiên để lại ý kiến.
         </div>
       ) : (
         <div className='space-y-4'>

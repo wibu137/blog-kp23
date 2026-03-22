@@ -73,7 +73,7 @@ export default function DashComments() {
   if (!user?.publicMetadata?.isAdmin) {
     return (
       <div className='flex flex-col items-center justify-center h-full w-full py-7'>
-        <h1 className='text-2xl font-semibold'>You are not an admin!</h1>
+        <h1 className='text-2xl font-semibold'>Bạn không phải quản trị viên!</h1>
       </div>
     );
   }
@@ -87,17 +87,17 @@ export default function DashComments() {
       )}
 
       {loading ? (
-        <p>Loading comments...</p>
+        <p>Đang tải bình luận...</p>
       ) : comments.length === 0 ? (
-        <p>No comments found.</p>
+        <p>Chưa có bình luận nào.</p>
       ) : (
         <Table hoverable className='shadow-md'>
           <Table.Head>
-            <Table.HeadCell>Author</Table.HeadCell>
-            <Table.HeadCell>Comment</Table.HeadCell>
-            <Table.HeadCell>Post</Table.HeadCell>
-            <Table.HeadCell>Date</Table.HeadCell>
-            <Table.HeadCell>Delete</Table.HeadCell>
+            <Table.HeadCell>Tác giả</Table.HeadCell>
+            <Table.HeadCell>Bình luận</Table.HeadCell>
+            <Table.HeadCell>Bài viết</Table.HeadCell>
+            <Table.HeadCell>Ngày tạo</Table.HeadCell>
+            <Table.HeadCell>Xóa</Table.HeadCell>
           </Table.Head>
           {comments.map((comment) => (
             <Table.Body className='divide-y' key={comment._id}>
@@ -106,7 +106,7 @@ export default function DashComments() {
                 <Table.Cell className='min-w-80'>
                   <p className='line-clamp-3'>{comment.content}</p>
                   {comment.parentCommentId && (
-                    <p className='mt-1 text-xs text-slate-500'>Reply</p>
+                    <p className='mt-1 text-xs text-slate-500'>Phản hồi</p>
                   )}
                 </Table.Cell>
                 <Table.Cell>
@@ -131,7 +131,7 @@ export default function DashComments() {
                     onClick={() => handleDelete(comment._id)}
                     disabled={processingId === comment._id}
                   >
-                    {processingId === comment._id ? 'Working...' : 'Delete'}
+                    {processingId === comment._id ? 'Đang xử lý...' : 'Xóa'}
                   </button>
                 </Table.Cell>
               </Table.Row>
