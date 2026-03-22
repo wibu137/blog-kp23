@@ -16,7 +16,6 @@ export const POST = async (req) => {
     const data = await req.json();
     const content = data.content?.trim();
     const parentCommentId = data.parentCommentId?.trim() || null;
-    const isAdmin = Boolean(authUser.publicMetadata?.isAdmin);
 
     if (!data.postId || !content) {
       return Response.json(
@@ -67,7 +66,7 @@ export const POST = async (req) => {
       username: displayName,
       profilePicture: mongoUser.profilePicture || authUser.imageUrl || '',
       content,
-      isApproved: isAdmin,
+      isApproved: true,
     });
 
     return Response.json({ comment }, { status: 201 });

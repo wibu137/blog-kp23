@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Alert, Button, Table } from 'flowbite-react';
+import { Alert, Table } from 'flowbite-react';
 import { useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 
@@ -42,37 +42,6 @@ export default function DashComments() {
       fetchComments();
     }
   }, [user?.publicMetadata?.isAdmin]);
-
-  const handleApprove = async (commentId) => {
-    try {
-      setProcessingId(commentId);
-      const res = await fetch('/api/comment/approve', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ commentId }),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || 'Failed to approve comment');
-      }
-
-      setComments((prev) =>
-        prev.map((comment) =>
-          comment._id === commentId
-            ? { ...comment, isApproved: true, ...data.comment }
-            : comment
-        )
-      );
-      setError(null);
-    } catch (approveError) {
-      setError(approveError.message || 'Failed to approve comment');
-    } finally {
-      setProcessingId(null);
-    }
-  };
 
   const handleDelete = async (commentId) => {
     try {
@@ -124,28 +93,15 @@ export default function DashComments() {
       ) : (
         <Table hoverable className='shadow-md'>
           <Table.Head>
-            <Table.HeadCell>Status</Table.HeadCell>
             <Table.HeadCell>Author</Table.HeadCell>
             <Table.HeadCell>Comment</Table.HeadCell>
             <Table.HeadCell>Post</Table.HeadCell>
             <Table.HeadCell>Date</Table.HeadCell>
-            <Table.HeadCell>Approve</Table.HeadCell>
             <Table.HeadCell>Delete</Table.HeadCell>
           </Table.Head>
           {comments.map((comment) => (
             <Table.Body className='divide-y' key={comment._id}>
               <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
-                <Table.Cell>
-                  {comment.isApproved ? (
-                    <span className='rounded-full bg-emerald-100 px-2 py-1 text-xs font-medium text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300'>
-                      Approved
-                    </span>
-                  ) : (
-                    <span className='rounded-full bg-amber-100 px-2 py-1 text-xs font-medium text-amber-700 dark:bg-amber-900/40 dark:text-amber-300'>
-                      Pending
-                    </span>
-                  )}
-                </Table.Cell>
                 <Table.Cell>{comment.username}</Table.Cell>
                 <Table.Cell className='min-w-80'>
                   <p className='line-clamp-3'>{comment.content}</p>
@@ -167,20 +123,6 @@ export default function DashComments() {
                 </Table.Cell>
                 <Table.Cell>
                   {new Date(comment.createdAt).toLocaleDateString()}
-                </Table.Cell>
-                <Table.Cell>
-                  {comment.isApproved ? (
-                    <span className='text-slate-400'>Approved</span>
-                  ) : (
-                    <Button
-                      size='xs'
-                      gradientDuoTone='greenToBlue'
-                      onClick={() => handleApprove(comment._id)}
-                      disabled={processingId === comment._id}
-                    >
-                      {processingId === comment._id ? 'Working...' : 'Approve'}
-                    </Button>
-                  )}
                 </Table.Cell>
                 <Table.Cell>
                   <button

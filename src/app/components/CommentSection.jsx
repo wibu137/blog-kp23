@@ -41,7 +41,6 @@ function CommentItem({
   isAdmin,
   onReply,
   onDelete,
-  onApprove,
   replyDrafts,
   setReplyDrafts,
   submittingReplyId,
@@ -52,15 +51,12 @@ function CommentItem({
   const isOwner = currentUserId && comment.userId === currentUserId;
   const canDelete = Boolean(isOwner || isAdmin);
   const canReply = Boolean(currentUser);
-  const isApproved = comment.isApproved !== false;
   const isReplying = replyDrafts.openFor === comment._id;
   const replyValue = replyDrafts.values[comment._id] || '';
 
   return (
     <article
-      className={`rounded-2xl border border-slate-200 p-4 shadow-sm dark:border-slate-700 ${
-        !isApproved ? 'border-amber-300 bg-amber-50/60 dark:border-amber-700 dark:bg-amber-950/20' : ''
-      }`}
+      className='rounded-2xl border border-slate-200 p-4 shadow-sm dark:border-slate-700'
       style={{ marginLeft: `${Math.min(depth, 4) * 20}px` }}
     >
       <div className='mb-3 flex items-start gap-3'>
@@ -71,16 +67,9 @@ function CommentItem({
           className='h-10 w-10 rounded-full object-cover'
         />
         <div className='min-w-0 flex-1'>
-          <div className='flex flex-wrap items-center gap-2'>
-            <p className='truncate font-medium text-slate-900 dark:text-slate-100'>
-              {comment.username}
-            </p>
-            {!isApproved && (
-              <span className='rounded-full bg-amber-100 px-2 py-0.5 text-[11px] font-medium text-amber-800 dark:bg-amber-900/50 dark:text-amber-200'>
-                Cho duyet
-              </span>
-            )}
-          </div>
+          <p className='truncate font-medium text-slate-900 dark:text-slate-100'>
+            {comment.username}
+          </p>
           <p className='text-xs text-slate-500 dark:text-slate-400'>
             {new Date(comment.createdAt).toLocaleString()}
           </p>
@@ -104,17 +93,6 @@ function CommentItem({
             }
           >
             Tra loi
-          </button>
-        )}
-
-        {isAdmin && !isApproved && (
-          <button
-            type='button'
-            className='font-medium text-emerald-600 hover:underline dark:text-emerald-400'
-            onClick={() => onApprove(comment._id)}
-            disabled={processingId === comment._id}
-          >
-            {processingId === comment._id ? 'Dang duyet...' : 'Duyet'}
           </button>
         )}
 
@@ -185,7 +163,6 @@ function CommentItem({
               isAdmin={isAdmin}
               onReply={onReply}
               onDelete={onDelete}
-              onApprove={onApprove}
               replyDrafts={replyDrafts}
               setReplyDrafts={setReplyDrafts}
               submittingReplyId={submittingReplyId}
@@ -267,12 +244,7 @@ export default function CommentSection({ postId }) {
 
     setComments((prev) => [data.comment, ...prev]);
     setError(null);
-
-    if (data.comment.isApproved === false) {
-      setNotice('Binh luan cua ban da duoc gui va dang cho admin duyet.');
-    } else {
-      setNotice('Binh luan da duoc dang thanh cong.');
-    }
+    setNotice('Binh luan da duoc dang thanh cong.');
 
     return data.comment;
   };
@@ -350,38 +322,6 @@ export default function CommentSection({ postId }) {
     }
   };
 
-  const handleApprove = async (commentId) => {
-    try {
-      setProcessingId(commentId);
-      const res = await fetch('/api/comment/approve', {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ commentId }),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || 'Failed to approve comment');
-      }
-
-      setComments((prev) =>
-        prev.map((comment) =>
-          comment._id === commentId
-            ? { ...comment, isApproved: true, ...data.comment }
-            : comment
-        )
-      );
-      setNotice('Da duyet binh luan.');
-      setError(null);
-    } catch (approveError) {
-      setError(approveError.message || 'Failed to approve comment');
-    } finally {
-      setProcessingId(null);
-    }
-  };
-
   return (
     <section className='mx-auto mt-12 w-full max-w-2xl border-t border-slate-200 px-3 pt-8 dark:border-slate-700'>
       <div className='mb-6 flex items-center justify-between gap-3'>
@@ -421,9 +361,7 @@ export default function CommentSection({ postId }) {
                 {user?.username || user?.fullName || 'Ban'}
               </p>
               <p className='text-sm text-slate-500 dark:text-slate-400'>
-                {isAdmin
-                  ? 'Binh luan cua admin se hien thi ngay lap tuc.'
-                  : 'Binh luan moi se cho admin duyet truoc khi hien thi cong khai.'}
+                Chia se y kien cua ban va tra loi nguoi khac ngay duoi bai viet.
               </p>
             </div>
           </div>
@@ -480,7 +418,6 @@ export default function CommentSection({ postId }) {
               isAdmin={isAdmin}
               onReply={handleReply}
               onDelete={handleDelete}
-              onApprove={handleApprove}
               replyDrafts={replyDrafts}
               setReplyDrafts={setReplyDrafts}
               submittingReplyId={submittingReplyId}
