@@ -25,13 +25,13 @@ const footerCopy = {
     { href: '/search', label: 'B\u00e0i vi\u1ebft n\u1ed5i b\u1eadt' },
   ],
   categories: [
-    { href: '/search?searchTerm=con+nguoi', label: 'Con ng\u01b0\u1eddi' },
-    { href: '/search?searchTerm=van+hoa', label: 'V\u0103n h\u00f3a' },
-    { href: '/search?searchTerm=thien+nhien', label: 'Thi\u00ean nhi\u00ean' },
+    { href: '/search?sort=desc&category=people', label: 'Con ng\u01b0\u1eddi' },
+    { href: '/search?sort=desc&category=culture', label: 'V\u0103n h\u00f3a' },
+    { href: '/search?sort=desc&category=plants', label: 'Thi\u00ean nhi\u00ean' },
   ],
   values: [
-    { href: '/search?searchTerm=moi+truong', label: 'M\u00f4i tr\u01b0\u1eddng' },
-    { href: '/search?searchTerm=dong+vat', label: '\u0110\u1ed9ng v\u1eadt' },
+    { href: '/search?sort=desc&category=environment', label: 'M\u00f4i tr\u01b0\u1eddng' },
+    { href: '/search?sort=desc&category=animals', label: '\u0110\u1ed9ng v\u1eadt' },
     { href: '/search', label: 'Kho tri th\u1ee9c' },
   ],
   copyrightBy: "KP23's Blog",
