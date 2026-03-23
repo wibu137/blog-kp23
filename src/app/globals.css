@@ -4,6 +4,11 @@
 
 body {
   height: 100vh;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+.font-serif {
+  font-family: var(--font-serif), Georgia, 'Times New Roman', serif;
 }
 
 .ql-editor {
@@ -17,13 +22,13 @@ body {
 .post-content h1 {
   font-size: 1.5rem;
   font-weight: 600;
-  font-family: sans-serif;
+  font-family: var(--font-serif), Georgia, 'Times New Roman', serif;
   margin: 1.5rem 0;
 }
 
 .post-content h2 {
   font-size: 1.4rem;
-  font-family: sans-serif;
+  font-family: var(--font-serif), Georgia, 'Times New Roman', serif;
   margin: 1.5rem 0;
 }
 

@@ -1,4 +1,4 @@
-import localFont from 'next/font/local';
+import { Be_Vietnam_Pro, Merriweather } from 'next/font/google';
 import './globals.css';
 import Header from './components/Header';
 import { ThemeProvider } from 'next-themes';
@@ -7,15 +7,16 @@ import { ClerkProvider } from '@clerk/nextjs';
 import { ThemeModeScript } from 'flowbite-react';
 import Footer from './components/Footer';
 
-const geistSans = localFont({
-  src: './fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
-  weight: '100 900',
+const beVietnamPro = Be_Vietnam_Pro({
+  subsets: ['latin', 'vietnamese'],
+  variable: '--font-sans',
+  weight: ['400', '500', '600', '700'],
 });
-const geistMono = localFont({
-  src: './fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
-  weight: '100 900',
+
+const merriweather = Merriweather({
+  subsets: ['latin', 'vietnamese'],
+  variable: '--font-serif',
+  weight: ['400', '700'],
 });
 
 export const metadata = {
@@ -31,7 +32,7 @@ export default function RootLayout({ children }) {
           <ThemeModeScript />
         </head>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${beVietnamPro.variable} ${merriweather.variable} antialiased`}
         >
           <ThemeProvider>
             <ThemeCom>
