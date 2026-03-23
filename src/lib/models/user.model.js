@@ -33,6 +33,11 @@ const userSchema = new mongoose.Schema(
       required: false,
     },
 
+    assistantProfileSummary: {
+      type: String,
+      default: '',
+    },
+
     isAdmin: {
       type: Boolean,
       default: false,

@@ -8,6 +8,7 @@ import DashPosts from '../components/DashPosts';
 import DashUsers from '../components/DashUsers';
 import DashboardComp from '../components/DashboardComp';
 import DashComments from '../components/DashComments';
+import DashKnowledge from '../components/DashKnowledge';
 export default function Dashboard() {
   const searchParams = useSearchParams();
   const [tab, setTab] = useState('');
@@ -31,6 +32,7 @@ export default function Dashboard() {
 
       {tab === 'users' && <DashUsers />}
       {tab === 'comments' && <DashComments />}
+      {tab === 'knowledge' && <DashKnowledge />}
       {tab === 'dash' && <DashboardComp />}
     </div>
   );

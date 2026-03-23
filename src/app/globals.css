@@ -5,6 +5,9 @@
 body {
   height: 100vh;
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(16, 185, 129, 0.08), transparent 28%),
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
 }
 
 .font-serif {
@@ -43,4 +46,19 @@ body {
 
 .dark .post-content a {
   color: red;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(16, 185, 129, 0.35) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.35);
+  border-radius: 999px;
 }

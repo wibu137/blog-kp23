@@ -21,6 +21,7 @@ const headerCopy = {
     { href: '/', label: 'Trang ch\u1ee7' },
     { href: '/about', label: 'Gi\u1edbi thi\u1ec7u' },
     { href: '/projects', label: 'Ch\u1ee7 \u0111\u1ec1 n\u1ed5i b\u1eadt' },
+    { href: '/assistant', label: 'AI Assistant' },
   ],
 };
 

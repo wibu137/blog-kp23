@@ -23,6 +23,7 @@ const footerCopy = {
   explore: [
     { href: '/about', label: 'V\u1ec1 KP23' },
     { href: '/search', label: 'B\u00e0i vi\u1ebft n\u1ed5i b\u1eadt' },
+    { href: '/assistant', label: 'AI Assistant' },
   ],
   categories: [
     { href: '/search?sort=desc&category=people', label: 'Con ng\u01b0\u1eddi' },
